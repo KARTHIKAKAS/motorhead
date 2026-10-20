@@ -1380,3 +1380,27 @@ dialog form { display: grid; gap: 12px; margin-top: 10px; }
   }
   .reveal { opacity: 1; transform: none; }
 }
+
+/* ---------------- auth-aware nav & join form ---------------- */
+.nav__user {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--text);
+  white-space: nowrap;
+  margin-right: 2px;
+}
+.linklike {
+  background: none;
+  border: none;
+  padding: 0;
+  margin-left: 4px;
+  color: var(--mint);
+  font: inherit;
+  cursor: pointer;
+  text-decoration: underline;
+}
+.linklike:hover { color: #ffffff; }
+#logoutBtn { display: inline-flex; }
+@media (max-width: 860px) {
+  .nav__actions #logoutBtn { display: inline-flex; }
+}

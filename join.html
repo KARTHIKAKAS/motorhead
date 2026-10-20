@@ -81,8 +81,8 @@
     </div>
 
     <div class="join-card" id="joinCard">
-      <span class="dialog__kicker">Create your account</span>
-      <h2>Join the garage</h2>
+      <span class="dialog__kicker" id="joinKicker">Create your account</span>
+      <h2 id="joinTitle">Join the garage</h2>
       <p>Free forever for riders. No credit card, no trial, no catch.</p>
 
       <div data-existing hidden style="margin-bottom:18px;padding:12px 14px;border:1px solid rgba(92,225,192,.32);background:rgba(92,225,192,.08);border-radius:10px;font-size:.85rem">
@@ -90,7 +90,7 @@
       </div>
 
       <form id="joinForm" novalidate>
-        <div class="field">
+        <div class="field join-signup">
           <label for="j-name">What should we call you?</label>
           <input id="j-name" name="name" type="text" placeholder="Aarav Mehta" autocomplete="name" maxlength="60" required>
         </div>
@@ -98,7 +98,7 @@
           <label for="j-email">Email</label>
           <input id="j-email" name="email" type="email" placeholder="you@example.com" autocomplete="email" maxlength="120" required>
         </div>
-        <div class="field--row field">
+        <div class="field--row field join-signup">
           <div class="field">
             <label for="j-country">Country</label>
             <input id="j-country" name="country" type="text" placeholder="India" autocomplete="country-name" maxlength="60">
@@ -108,9 +108,16 @@
             <input id="j-ride" name="ride" type="text" placeholder="Himalayan 411" maxlength="60">
           </div>
         </div>
+        <div class="field">
+          <label for="j-password">Password</label>
+          <input id="j-password" name="password" type="password" placeholder="At least 8 characters" autocomplete="new-password" minlength="8" maxlength="120" required>
+        </div>
         <p class="form-error" id="joinError" role="alert"></p>
-        <button class="btn btn--primary btn--block" type="submit" style="margin-top:2px">Create my garage</button>
-        <p class="form-note" style="text-align:center">By joining you agree to be decent to other riders. That's the whole policy.</p>
+        <button class="btn btn--primary btn--block" type="submit" id="joinSubmit" style="margin-top:2px">Create my garage</button>
+        <p class="form-note" style="text-align:center">
+          <span id="joinModeHint">Already have an account?</span>
+          <button class="linklike" type="button" id="joinModeToggle">Log in</button>
+        </p>
       </form>
     </div>
   </section>
@@ -120,11 +127,12 @@
   <div class="container">
     <div class="footer__bottom" style="margin-top:0;border-top:0;padding-top:0">
       <span>© 2026 Motorhead <span class="dot">◆</span> A community prototype</span>
-      <span>This demo stores your details in this browser only <span class="dot">◆</span> No email is sent</span>
+      <span>Your details are stored securely on the server <span class="dot">◆</span> No marketing email, ever</span>
     </div>
   </div>
 </footer>
 
+<script src="assets/js/api.js"></script>
 <script src="assets/js/data.js"></script>
 <script src="assets/js/app.js"></script>
 </body>

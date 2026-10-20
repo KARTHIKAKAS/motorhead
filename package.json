@@ -1,0 +1,18 @@
+{
+  "name": "motorhead",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Motorhead — a community site for riders, with a Node.js + Express + SQLite backend.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node --disable-warning=ExperimentalWarning server.js",
+    "dev": "node --watch --disable-warning=ExperimentalWarning server.js"
+  },
+  "engines": {
+    "node": ">=22.5.0"
+  },
+  "dependencies": {
+    "cookie-parser": "^1.4.7",
+    "express": "^4.21.2"
+  }
+}

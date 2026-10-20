@@ -48,6 +48,14 @@
     toastTimer = setTimeout(() => el.classList.remove("show"), 2600);
   }
 
+  function requireUser() {
+    const user = store.get("mh_user", null);
+    if (user && user.name) return user;
+    toast("Join Motorhead first — it's free.");
+    setTimeout(() => (location.href = "join.html"), 900);
+    return null;
+  }
+
   /* ---------------- procedural scenery ---------------- */
   const PALETTES = {
     sunset: { top: "#2a1030", bottom: "#ff6a3d", sun: "#ffd27a", far: "#331a2c", mid: "#1f0f1c", near: "#140b12", road: "#151016" },
@@ -176,6 +184,51 @@
           links.classList.remove("is-open");
         }
       });
+    }
+  }
+
+  async function onLogout() {
+    try {
+      await window.MotorheadAPI.post("/api/auth/logout", {});
+    } catch (e) {
+      /* ignore network errors on logout */
+    }
+    window.MotorheadAPI.clearLocal();
+    location.href = "index.html";
+  }
+
+  function renderAuthNav() {
+    const actions = $(".nav__actions");
+    if (!actions) return;
+
+    const existing = actions.querySelector(".nav__user");
+    const logout = actions.querySelector("#logoutBtn");
+    if (existing) existing.remove();
+    if (logout) logout.remove();
+
+    const user = store.get("mh_user", null);
+    if (!user || !user.name) return; // keep the static "Sign in / Join free" links
+
+    actions.querySelectorAll("a").forEach((a) => a.remove());
+
+    const chip = document.createElement("span");
+    chip.className = "nav__user";
+    chip.textContent = "Hi, " + user.name.split(/\s+/)[0];
+
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "btn btn--ghost btn--sm";
+    btn.id = "logoutBtn";
+    btn.textContent = "Log out";
+    btn.addEventListener("click", onLogout);
+
+    const toggle = actions.querySelector("[data-menu-toggle]");
+    if (toggle) {
+      actions.insertBefore(chip, toggle);
+      actions.insertBefore(btn, toggle);
+    } else {
+      actions.appendChild(chip);
+      actions.appendChild(btn);
     }
   }
 
@@ -415,17 +468,23 @@
     if (input) input.focus();
   }
 
-  function addComment(id, text) {
-    const user = store.get("mh_user", null);
-    const name = user && user.name ? user.name : "Guest rider";
-    FEED.comments = store.get("mh_comments", {});
-    FEED.comments[id] = FEED.comments[id] || [];
-    FEED.comments[id].push({ name, text, when: "now" });
-    store.set("mh_comments", FEED.comments);
+  async function addComment(id, text) {
+    if (!requireUser()) return false;
+    try {
+      const data = await window.MotorheadAPI.post("/api/comments", { postId: id, text });
+      FEED.comments = store.get("mh_comments", {});
+      FEED.comments[id] = FEED.comments[id] || [];
+      FEED.comments[id].push(data.comment);
+      store.set("mh_comments", FEED.comments);
 
-    const counter = $(`[data-comment-count="${CSS.escape(id)}"]`);
-    const post = allPosts().find((p) => p.id === id);
-    if (counter && post) counter.textContent = `${post.comments + FEED.comments[id].length} comments`;
+      const counter = $(`[data-comment-count="${CSS.escape(id)}"]`);
+      const post = allPosts().find((p) => p.id === id);
+      if (counter && post) counter.textContent = `${post.comments + FEED.comments[id].length} comments`;
+      return true;
+    } catch (err) {
+      toast(err.message || "Could not post your comment.");
+      return false;
+    }
   }
 
   function initFeed() {
@@ -441,15 +500,35 @@
       const act = btn.dataset.act;
 
       if (act === "like") {
+        if (!requireUser()) return;
         FEED.likes = store.get("mh_likes", {});
-        FEED.likes[id] = !FEED.likes[id];
+        const liked = !FEED.likes[id];
+        FEED.likes[id] = liked;
         store.set("mh_likes", FEED.likes);
         const post = allPosts().find((p) => p.id === id);
-        const liked = !!FEED.likes[id];
         btn.classList.toggle("is-liked", liked);
         btn.setAttribute("aria-pressed", String(liked));
         const counter = $(`[data-like-count="${CSS.escape(id)}"]`);
         if (counter && post) counter.textContent = `${(post.likes + (liked ? 1 : 0)).toLocaleString()} likes`;
+
+        window.MotorheadAPI.post("/api/likes", { postId: id })
+          .then((data) => {
+            FEED.likes = store.get("mh_likes", {});
+            FEED.likes[id] = !!data.liked;
+            store.set("mh_likes", FEED.likes);
+            btn.classList.toggle("is-liked", !!data.liked);
+            btn.setAttribute("aria-pressed", String(!!data.liked));
+            if (counter && post) counter.textContent = `${(post.likes + (data.liked ? 1 : 0)).toLocaleString()} likes`;
+          })
+          .catch((err) => {
+            FEED.likes = store.get("mh_likes", {});
+            FEED.likes[id] = !liked;
+            store.set("mh_likes", FEED.likes);
+            btn.classList.toggle("is-liked", !liked);
+            btn.setAttribute("aria-pressed", String(!liked));
+            if (counter && post) counter.textContent = `${(post.likes + (!liked ? 1 : 0)).toLocaleString()} likes`;
+            toast(err.message || "Could not save your like.");
+          });
       }
 
       if (act === "comments") toggleComments(id, btn);
@@ -467,7 +546,7 @@
       }
     });
 
-    host.addEventListener("submit", (e) => {
+    host.addEventListener("submit", async (e) => {
       const form = e.target.closest("[data-comment-form]");
       if (!form) return;
       e.preventDefault();
@@ -475,7 +554,8 @@
       const text = input.value.trim();
       if (!text) return;
       const id = form.dataset.commentForm;
-      addComment(id, text);
+      const ok = await addComment(id, text);
+      if (!ok) return;
       input.value = "";
       const panel = $(`[data-comments-for="${CSS.escape(id)}"]`);
       const btn = $(`[data-act="comments"][data-id="${CSS.escape(id)}"]`);
@@ -507,7 +587,7 @@
   function initComposer() {
     const form = $("#composer");
     if (!form) return;
-    form.addEventListener("submit", (e) => {
+    form.addEventListener("submit", async (e) => {
       e.preventDefault();
       const text = form.elements.body.value.trim();
       if (text.length < 8) {
@@ -515,38 +595,31 @@
         form.elements.body.focus();
         return;
       }
+      if (!requireUser()) return;
       const category = form.elements.category.value;
       const location = form.elements.location.value.trim() || "Somewhere on the road";
-      const user = store.get("mh_user", null);
-      const name = user && user.name ? user.name : "Guest rider";
-      const initials = name
-        .split(/\s+/)
-        .map((w) => w[0])
-        .join("")
-        .slice(0, 2)
-        .toUpperCase();
 
-      const post = {
-        id: "u" + Date.now().toString(36),
-        name,
+      const draft = {
         location,
-        initials: initials || "GR",
         category,
-        time: "just now",
-        scene: SCENE_BY_CATEGORY[category] || "sunset",
-        seed: Math.floor(Math.random() * 9000) + 100,
-        media: true,
         body: text.split(/\n{2,}/).map((s) => s.trim()).filter(Boolean),
-        likes: 0,
-        comments: 0
+        scene: SCENE_BY_CATEGORY[category] || "sunset",
+        seed: Math.floor(Math.random() * 9000) + 100
       };
+
+      let post;
+      try {
+        const data = await window.MotorheadAPI.post("/api/posts", draft);
+        post = data.post;
+      } catch (err) {
+        toast(err.message || "Could not save your post.");
+        return;
+      }
 
       const saved = store.get("mh_posts", []);
       saved.unshift(post);
-      if (!store.set("mh_posts", saved)) {
-        toast("Your browser blocked local storage — post not saved.");
-        return;
-      }
+      store.set("mh_posts", saved);
+
       form.reset();
       FEED.filter = "All";
       $$("[data-filter]").forEach((c) => c.classList.toggle("is-active", c.dataset.filter === "All"));
@@ -688,15 +761,16 @@
 
       const form = $("#machineForm");
       if (form) {
-        form.addEventListener("submit", (e) => {
+        form.addEventListener("submit", async (e) => {
           e.preventDefault();
+          if (!requireUser()) return;
           const data = new FormData(form);
-          const user = store.get("mh_user", null);
-          const vehicle = {
-            id: "uv" + Date.now().toString(36),
-            name: String(data.get("name") || "").trim(),
+          const name = String(data.get("name") || "").trim();
+          if (!name) return;
+
+          const draft = {
+            name,
             year: Number(data.get("year")) || new Date().getFullYear(),
-            owner: (user && user.name) || String(data.get("owner") || "").trim() || "Guest rider",
             location: String(data.get("location") || "").trim() || "Somewhere on the road",
             type: String(data.get("type") || "Daily"),
             odometer: Number(data.get("odometer")) || 0,
@@ -708,7 +782,16 @@
               .filter(Boolean)
               .slice(0, 5)
           };
-          if (!vehicle.name) return;
+
+          let vehicle;
+          try {
+            const res = await window.MotorheadAPI.post("/api/vehicles", draft);
+            vehicle = res.vehicle;
+          } catch (err) {
+            toast(err.message || "Could not add your machine.");
+            return;
+          }
+
           const saved = store.get("mh_vehicles", []);
           saved.unshift(vehicle);
           store.set("mh_vehicles", saved);
@@ -723,6 +806,8 @@
   }
 
   /* ---------------- join ---------------- */
+  let joinMode = "signup";
+
   function initJoin() {
     const form = $("#joinForm");
     if (!form) return;
@@ -732,37 +817,95 @@
       const who = $("#joinWho");
       if (who) {
         who.textContent = existing.name;
-        who.closest("[data-existing]").hidden = false;
+        const box = who.closest("[data-existing]");
+        if (box) box.hidden = false;
       }
     }
 
-    form.addEventListener("submit", (e) => {
+    const toggle = $("#joinModeToggle");
+    const hint = $("#joinModeHint");
+    const submit = $("#joinSubmit");
+    const kicker = $("#joinKicker");
+    const title = $("#joinTitle");
+    const password = $("#j-password");
+    const signupOnly = $$(".join-signup");
+
+    function setMode(mode) {
+      joinMode = mode;
+      const login = mode === "login";
+      signupOnly.forEach((el) => (el.hidden = login));
+      if (toggle) toggle.textContent = login ? "Create an account" : "Log in";
+      if (hint) hint.textContent = login ? "New here?" : "Already have an account?";
+      if (submit) submit.textContent = login ? "Log in" : "Create my garage";
+      if (kicker) kicker.textContent = login ? "Welcome back" : "Create your account";
+      if (title) title.textContent = login ? "Log in to your garage" : "Join the garage";
+      if (password) password.setAttribute("autocomplete", login ? "current-password" : "new-password");
+    }
+
+    if (toggle) toggle.addEventListener("click", () => setMode(joinMode === "signup" ? "login" : "signup"));
+    setMode("signup");
+
+    form.addEventListener("submit", async (e) => {
       e.preventDefault();
       const data = new FormData(form);
-      const name = String(data.get("name") || "").trim();
       const email = String(data.get("email") || "").trim();
+      const password = String(data.get("password") || "");
       const error = $("#joinError");
+      error.textContent = "";
 
-      if (name.length < 2) {
-        error.textContent = "Tell us what to call you.";
-        form.elements.name.focus();
-        return;
-      }
       if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) {
         error.textContent = "That email doesn't look right.";
         form.elements.email.focus();
         return;
       }
-      error.textContent = "";
 
-      const user = {
-        name,
-        email,
-        country: String(data.get("country") || "").trim(),
-        ride: String(data.get("ride") || "").trim(),
-        joined: new Date().toISOString()
-      };
+      let user;
+      if (joinMode === "login") {
+        if (!password) {
+          error.textContent = "Enter your password.";
+          form.elements.password.focus();
+          return;
+        }
+        try {
+          const res = await window.MotorheadAPI.post("/api/auth/login", { email, password });
+          user = res.user;
+        } catch (err) {
+          error.textContent = err.message || "Could not log in.";
+          return;
+        }
+      } else {
+        const name = String(data.get("name") || "").trim();
+        if (name.length < 2) {
+          error.textContent = "Tell us what to call you.";
+          form.elements.name.focus();
+          return;
+        }
+        if (password.length < 8) {
+          error.textContent = "Password needs at least 8 characters.";
+          form.elements.password.focus();
+          return;
+        }
+        try {
+          const res = await window.MotorheadAPI.post("/api/auth/signup", {
+            name,
+            email,
+            password,
+            country: String(data.get("country") || "").trim(),
+            ride: String(data.get("ride") || "").trim()
+          });
+          user = res.user;
+        } catch (err) {
+          error.textContent = err.message || "Could not create your account.";
+          return;
+        }
+      }
+
       store.set("mh_user", user);
+      try {
+        await window.MotorheadAPI.hydrate();
+      } catch (err) {
+        /* offline — the local cache is already set above */
+      }
 
       const card = $("#joinCard");
       if (card) {
@@ -771,15 +914,16 @@
             <div class="success__mark" aria-hidden="true">
               <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
             </div>
-            <h3>You're in, ${esc(name.split(" ")[0])}.</h3>
-            <p style="color:var(--muted)">Your garage is open. No email has been sent — this is a front-end prototype and your details stay in this browser.</p>
+            <h3>You're in, ${esc(user.name.split(" ")[0])}.</h3>
+            <p style="color:var(--muted)">Your garage is open. Your profile is saved to the server, so it follows you to any device.</p>
             <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:20px">
               <a class="btn btn--primary" href="feed.html">Open the community</a>
               <a class="btn btn--ghost" href="garage.html">Add your machine</a>
             </div>
           </div>`;
       }
-      toast("Welcome to Motorhead");
+      renderAuthNav();
+      toast(joinMode === "login" ? "Welcome back" : "Welcome to Motorhead");
     });
   }
 
@@ -829,20 +973,24 @@
   }
 
   /* ---------------- boot ---------------- */
-  function boot() {
+  async function boot() {
     initNav();
     initMarquee();
     initGlobe();
     initRegions();
+    initSideRail();
+    initNewsletter();
+    hydrateScenes();
+    initReveal();
+
+    await window.MotorheadAPI.hydrate();
+
     initFeed();
     initComposer();
     initTrips();
     initGarage();
     initJoin();
-    initSideRail();
-    initNewsletter();
-    hydrateScenes();
-    initReveal();
+    renderAuthNav();
   }
 
   if (document.readyState === "loading") {
