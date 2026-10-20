@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Motorhead — every machine, every road, one garage</title>
+<meta name="description" content="Motorhead is the global community for riders and drivers. Share trip logs, builds, breakdowns and the roads worth taking — from anywhere in the world.">
+<meta name="theme-color" content="#0b0c0f">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'><rect width='40' height='40' rx='10' fill='%23ff5a1f'/><path d='M10 29V12l10 9 10-9v17' fill='none' stroke='%230b0c0f' stroke-width='3.4' stroke-linejoin='round' stroke-linecap='round'/></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="nav">
+  <div class="nav__inner">
+    <a class="brand" href="index.html" aria-label="Motorhead home">
+      <svg class="brand__mark" viewBox="0 0 40 40" aria-hidden="true">
+        <rect width="40" height="40" rx="11" fill="#ff5a1f"/>
+        <path d="M10 29V12l10 9 10-9v17" fill="none" stroke="#0b0c0f" stroke-width="3.4" stroke-linejoin="round" stroke-linecap="round"/>
+      </svg>
+      <span class="brand__word">MOTOR<span>HEAD</span></span>
+    </a>
+    <nav class="nav__links" id="navLinks" aria-label="Main">
+      <a href="feed.html">Community</a>
+      <a href="trips.html">Trips</a>
+      <a href="garage.html">Garage</a>
+      <a href="#world">World</a>
+    </nav>
+    <div class="nav__actions">
+      <a class="btn btn--ghost btn--sm" href="join.html">Sign in</a>
+      <a class="btn btn--primary btn--sm" href="join.html">Join free</a>
+      <button class="nav__toggle" type="button" aria-label="Toggle menu" aria-expanded="false" aria-controls="navLinks" data-menu-toggle><span></span></button>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+  <section class="hero">
+    <div class="container hero__grid">
+      <div class="hero__copy">
+        <span class="eyebrow">Est. 2026 · riders in 143 countries</span>
+        <h1>Every machine.<br><em>Every road.</em><br>One <span class="flash">garage</span>.</h1>
+        <p class="hero__lede">The global community for people who care too much about what they drive and ride. Post the build, the breakdown, the 4am start — and find someone who has already ridden your route.</p>
+        <div class="hero__actions">
+          <a class="btn btn--primary" href="join.html">Join Motorhead — free</a>
+          <a class="btn btn--ghost" href="trips.html">Explore trip logs</a>
+        </div>
+        <div class="stat-row">
+          <div class="stat"><b>184k</b><span>Riders</span></div>
+          <div class="stat"><b>143</b><span>Countries</span></div>
+          <div class="stat"><b>61k</b><span>Trip logs</span></div>
+          <div class="stat"><b>2.4M</b><span>Km logged</span></div>
+        </div>
+      </div>
+
+      <div class="hero__stage" aria-hidden="true">
+        <div class="hero__glow"></div>
+        <div class="ride-card ride-card--back">
+          <div class="ride-card__media">
+            <div data-scene="neon" data-seed="167"></div>
+          </div>
+          <div class="ride-card__body">
+            <div class="ride-card__route">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 20l-5.5-2.2V4.6L9 6.8l6-2.2 5.5 2.2v13.2L15 17.8 9 20Z"/><path d="M9 6.8v13.2M15 4.6v13.2"/></svg>
+              Osaka → Cape Sōya
+            </div>
+            <div class="ride-card__meta"><span>3,100 km</span><span>16 days</span></div>
+          </div>
+        </div>
+        <div class="ride-card ride-card--front">
+          <div class="ride-card__media">
+            <div data-scene="sunset" data-seed="131"></div>
+            <span class="ride-card__tag"><i class="dot-live"></i>Live · 34 riding</span>
+          </div>
+          <div class="ride-card__body">
+            <div class="ride-card__route">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 20l-5.5-2.2V4.6L9 6.8l6-2.2 5.5 2.2v13.2L15 17.8 9 20Z"/><path d="M9 6.8v13.2M15 4.6v13.2"/></svg>
+              Nairobi → Mombasa
+            </div>
+            <div class="ride-card__meta"><span>485 km</span><span>4 days</span><span>Wanjiru K.</span></div>
+          </div>
+        </div>
+        <div class="stage-badge">
+          <span class="dot-live"></span>
+          <b>1,204</b>
+          <span class="dim">riding right now</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="marquee" aria-label="Cities where Motorhead riders are active">
+    <div class="marquee__track" id="marqueeTrack"></div>
+  </div>
+
+  <section class="section" id="what">
+    <div class="container">
+      <div class="section-head reveal">
+        <div>
+          <span class="eyebrow">What you get</span>
+          <h2 class="section-title">Built for people who'd rather be riding</h2>
+        </div>
+        <p class="lede">No showroom gloss, no sponsored itineraries. Just riders, wrenches, and the honest version of the road.</p>
+      </div>
+
+      <div class="features">
+        <article class="feature reveal">
+          <span class="feature__num">01</span>
+          <div class="feature__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a15 15 0 0 1 0 18 15 15 0 0 1 0-18Z"/></svg>
+          </div>
+          <h3>Post from anywhere</h3>
+          <p>One feed for the whole planet. A mountain pass in Bolivia sits next to a commute in Lagos — and both get taken seriously.</p>
+        </article>
+
+        <article class="feature reveal">
+          <span class="feature__num">02</span>
+          <div class="feature__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 20l-5.5-2.2V4.6L9 6.8l6-2.2 5.5 2.2v13.2L15 17.8 9 20Z"/><path d="M9 6.8v13.2M15 4.6v13.2"/></svg>
+          </div>
+          <h3>Trip logs that mean something</h3>
+          <p>Distance, days, road conditions, fuel stops, the mechanic who saved you. Route notes you can actually plan with.</p>
+        </article>
+
+        <article class="feature reveal">
+          <span class="feature__num">03</span>
+          <div class="feature__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a4 4 0 0 0 5 5l-9.4 9.4a2.8 2.8 0 0 1-4-4l9.4-9.4Z"/><path d="M17.5 3.5 21 7l-2.5 2.5L15 6l2.5-2.5Z"/></svg>
+          </div>
+          <h3>The Garage</h3>
+          <p>Every bike, car, van and project gets a profile. Mileage, mods, history — the machine's story, not just a photo.</p>
+        </article>
+
+        <article class="feature reveal">
+          <span class="feature__num">04</span>
+          <div class="feature__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9.5" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.9M16.5 3.1a4 4 0 0 1 0 7.8"/></svg>
+          </div>
+          <h3>Find your crew</h3>
+          <p>Local clubs, Sunday runs, cross-continent meetups. Search by city and ride type, or start the group your town is missing.</p>
+        </article>
+
+        <article class="feature reveal">
+          <span class="feature__num">05</span>
+          <div class="feature__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3.2"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-2.9 1.2V21a2 2 0 1 1-4 0v-.1A1.7 1.7 0 0 0 7 19.4a1.7 1.7 0 0 0-1.9.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1A1.7 1.7 0 0 0 2.6 14H2.5a2 2 0 1 1 0-4h.1A1.7 1.7 0 0 0 4.6 7a1.7 1.7 0 0 0-.3-1.9l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1A1.7 1.7 0 0 0 10 2.6V2.5a2 2 0 1 1 4 0v.1A1.7 1.7 0 0 0 17 4.6a1.7 1.7 0 0 0 1.9-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0 1.2 2.9h.1a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1Z"/></svg>
+          </div>
+          <h3>Fix it together</h3>
+          <p>Ask the question at 11pm. Get an answer from someone who has had that exact rattle since 2019 and knows the fix.</p>
+        </article>
+
+        <article class="feature reveal">
+          <span class="feature__num">06</span>
+          <div class="feature__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s7-5.4 7-11a7 7 0 1 0-14 0c0 5.6 7 11 7 11Z"/><circle cx="12" cy="11" r="2.6"/></svg>
+          </div>
+          <h3>Real roads, not ads</h3>
+          <p>Border paperwork, fuel gaps, closures, seasons. Conditions reported by riders who were there last week.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--edge" id="feed-preview">
+    <div class="container">
+      <div class="section-head reveal">
+        <div>
+          <span class="eyebrow">Live dispatch</span>
+          <h2 class="section-title">Fresh from the community</h2>
+        </div>
+        <a class="btn btn--ghost" href="feed.html">Open the feed</a>
+      </div>
+      <div class="feed-list" id="feedList" data-limit="3"></div>
+    </div>
+  </section>
+
+  <section class="section" id="spotlight">
+    <div class="container">
+      <div class="section-head reveal">
+        <div>
+          <span class="eyebrow">Trip spotlight</span>
+          <h2 class="section-title">Nine days, two continents</h2>
+        </div>
+        <p class="lede">Every week we feature one log that goes past the postcard version. This one starts with a ferry and ends in the Atlas Mountains.</p>
+      </div>
+
+      <div class="spotlight reveal">
+        <div class="spotlight__media">
+          <div data-scene="desert" data-seed="149"></div>
+        </div>
+        <div class="spotlight__body">
+          <span class="eyebrow">Europe / North Africa</span>
+          <h3 class="spotlight__route">Lisbon → Marrakesh</h3>
+          <p>“Morocco is not a place you conquer in nine days. It's a place that politely tells you to come back with more time.”</p>
+          <div class="spot-grid">
+            <div><b>1,420</b><span>Kilometres</span></div>
+            <div><b>9</b><span>Days</span></div>
+            <div><b>2</b><span>Borders</span></div>
+          </div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:8px">
+            <a class="btn btn--primary" href="trips.html">Read the full log</a>
+            <a class="btn btn--ghost" href="feed.html">Ask Diogo a question</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--edge" id="world">
+    <div class="container world">
+      <div class="reveal">
+        <span class="eyebrow">One planet, one garage</span>
+        <h2 class="section-title" style="margin:14px 0 16px">The map is the community</h2>
+        <p class="lede">Motorhead is organised by place, not by algorithm. Follow the roads you want to ride and the people who ride them. When you land somewhere new, there is already a table with a seat.</p>
+        <div class="region-list" id="regionList"></div>
+        <div class="hero__actions" style="margin-top:24px">
+          <a class="btn btn--ghost" href="feed.html">Find riders near you</a>
+        </div>
+      </div>
+      <div class="globe-wrap reveal">
+        <div id="globe"></div>
+        <div class="globe-label">10 hubs · 143 countries</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="cta reveal">
+        <span class="eyebrow">Free forever for riders</span>
+        <h2>Your machine has stories. Give them somewhere to live.</h2>
+        <p>Join in under a minute. Log the trip you just did, add the bike in your shed, and find the person who has already ridden the road you're planning.</p>
+        <div class="cta__actions">
+          <a class="btn btn--primary" href="join.html">Create your garage</a>
+          <a class="btn btn--ghost" href="trips.html">See what people are riding</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer__grid">
+      <div class="footer__brand">
+        <a class="brand" href="index.html" aria-label="Motorhead home">
+          <svg class="brand__mark" viewBox="0 0 40 40" aria-hidden="true">
+            <rect width="40" height="40" rx="11" fill="#ff5a1f"/>
+            <path d="M10 29V12l10 9 10-9v17" fill="none" stroke="#0b0c0f" stroke-width="3.4" stroke-linejoin="round" stroke-linecap="round"/>
+          </svg>
+          <span class="brand__word">MOTOR<span>HEAD</span></span>
+        </a>
+        <p>The global garage for cars, bikes and everything in between. Built by riders, for riders.</p>
+      </div>
+      <div>
+        <h4>Explore</h4>
+        <ul>
+          <li><a href="feed.html">Community feed</a></li>
+          <li><a href="trips.html">Trip logs</a></li>
+          <li><a href="garage.html">The garage</a></li>
+          <li><a href="index.html#world">Riders near you</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Community</h4>
+        <ul>
+          <li><a href="join.html">Create an account</a></li>
+          <li><a href="feed.html">Ask a question</a></li>
+          <li><a href="trips.html">Log a trip</a></li>
+          <li><a href="garage.html">Add a machine</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Stay in the loop</h4>
+        <p style="color:var(--muted);font-size:.86rem">One email a month. Best trip logs, no marketing noise.</p>
+        <form class="newsletter" id="newsletter" novalidate>
+          <label class="skip-link" for="nl-email">Email</label>
+          <input id="nl-email" type="email" placeholder="you@example.com" autocomplete="email">
+          <button type="submit">Join</button>
+        </form>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      <span>© 2026 Motorhead <span class="dot">◆</span> A community prototype</span>
+      <span>Built with a static stack <span class="dot">◆</span> Data stays in your browser</span>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/js/data.js"></script>
+<script src="assets/js/app.js"></script>
+</body>
+</html>

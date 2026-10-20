@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The garage — Motorhead</title>
+<meta name="description" content="Profiles for every machine in the community: mileage, modifications and the story behind the build.">
+<meta name="theme-color" content="#0b0c0f">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'><rect width='40' height='40' rx='10' fill='%23ff5a1f'/><path d='M10 29V12l10 9 10-9v17' fill='none' stroke='%230b0c0f' stroke-width='3.4' stroke-linejoin='round' stroke-linecap='round'/></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="nav">
+  <div class="nav__inner">
+    <a class="brand" href="index.html" aria-label="Motorhead home">
+      <svg class="brand__mark" viewBox="0 0 40 40" aria-hidden="true">
+        <rect width="40" height="40" rx="11" fill="#ff5a1f"/>
+        <path d="M10 29V12l10 9 10-9v17" fill="none" stroke="#0b0c0f" stroke-width="3.4" stroke-linejoin="round" stroke-linecap="round"/>
+      </svg>
+      <span class="brand__word">MOTOR<span>HEAD</span></span>
+    </a>
+    <nav class="nav__links" id="navLinks" aria-label="Main">
+      <a href="feed.html">Community</a>
+      <a href="trips.html">Trips</a>
+      <a href="garage.html" aria-current="page">Garage</a>
+      <a href="index.html#world">World</a>
+    </nav>
+    <div class="nav__actions">
+      <a class="btn btn--ghost btn--sm" href="join.html">Sign in</a>
+      <a class="btn btn--primary btn--sm" href="join.html">Join free</a>
+      <button class="nav__toggle" type="button" aria-label="Toggle menu" aria-expanded="false" aria-controls="navLinks" data-menu-toggle><span></span></button>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+  <section class="page-head">
+    <div class="container">
+      <span class="eyebrow">Every machine has a story</span>
+      <h1>The garage</h1>
+      <p>Commuters, restomods, expedition rigs and the project that has been "almost done" for three years. Add yours — mileage, mods and all.</p>
+    </div>
+  </section>
+
+  <section class="section section--tight">
+    <div class="container">
+      <div class="feed-toolbar reveal" style="margin-bottom:22px">
+        <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap">
+          <label class="searchbar" for="garageSearch">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+            <input id="garageSearch" type="search" placeholder="Search machines, owners, cities…" autocomplete="off">
+          </label>
+          <span class="count" id="garageCount">8 in the garage</span>
+        </div>
+        <button class="btn btn--primary btn--sm" type="button" id="addMachine">+ Add your machine</button>
+      </div>
+
+      <div class="garage-grid" id="garageGrid"></div>
+    </div>
+  </section>
+</main>
+
+<dialog id="garageDialog">
+  <button class="dialog__close" type="button" data-close-dialog aria-label="Close">✕</button>
+  <div class="dialog__body">
+    <span class="dialog__kicker">Garage entry</span>
+    <h2>Add a machine</h2>
+    <p style="color:var(--muted);font-size:.9rem">Only the name is required. Everything else makes the profile more useful to the next rider.</p>
+    <form id="machineForm" autocomplete="off">
+      <div class="field">
+        <label for="m-name">Make and model</label>
+        <input id="m-name" name="name" type="text" placeholder="Royal Enfield Himalayan" maxlength="60" required>
+      </div>
+      <div class="field--row field">
+        <div class="field">
+          <label for="m-year">Year</label>
+          <input id="m-year" name="year" type="number" min="1900" max="2027" placeholder="2021" inputmode="numeric">
+        </div>
+        <div class="field">
+          <label for="m-type">Type</label>
+          <select id="m-type" name="type">
+            <option>Adventure</option>
+            <option>Daily</option>
+            <option>Overland</option>
+            <option>Restomod</option>
+            <option>Project</option>
+            <option>Touring</option>
+            <option>EV</option>
+            <option>Dual-sport</option>
+          </select>
+        </div>
+      </div>
+      <div class="field--row field">
+        <div class="field">
+          <label for="m-location">City, country</label>
+          <input id="m-location" name="location" type="text" placeholder="Mumbai, India" maxlength="60">
+        </div>
+        <div class="field">
+          <label for="m-odo">Odometer (km)</label>
+          <input id="m-odo" name="odometer" type="number" min="0" placeholder="41200" inputmode="numeric">
+        </div>
+      </div>
+      <div class="field">
+        <label for="m-mods">Mods (comma separated)</label>
+        <input id="m-mods" name="mods" type="text" placeholder="Bash plate, aux lights, sump guard" maxlength="120">
+      </div>
+      <div class="field">
+        <label for="m-owner">Owner name</label>
+        <input id="m-owner" name="owner" type="text" placeholder="Your name" maxlength="60">
+      </div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:6px">
+        <button class="btn btn--primary" type="submit">Add to the garage</button>
+        <button class="btn btn--ghost" type="button" data-close-dialog>Cancel</button>
+      </div>
+      <p class="form-note">Saved locally in this browser. Nothing is uploaded.</p>
+    </form>
+  </div>
+</dialog>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer__grid">
+      <div class="footer__brand">
+        <a class="brand" href="index.html" aria-label="Motorhead home">
+          <svg class="brand__mark" viewBox="0 0 40 40" aria-hidden="true">
+            <rect width="40" height="40" rx="11" fill="#ff5a1f"/>
+            <path d="M10 29V12l10 9 10-9v17" fill="none" stroke="#0b0c0f" stroke-width="3.4" stroke-linejoin="round" stroke-linecap="round"/>
+          </svg>
+          <span class="brand__word">MOTOR<span>HEAD</span></span>
+        </a>
+        <p>The global garage for cars, bikes and everything in between. Built by riders, for riders.</p>
+      </div>
+      <div>
+        <h4>Explore</h4>
+        <ul>
+          <li><a href="feed.html">Community feed</a></li>
+          <li><a href="trips.html">Trip logs</a></li>
+          <li><a href="garage.html">The garage</a></li>
+          <li><a href="index.html#world">Riders near you</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Community</h4>
+        <ul>
+          <li><a href="join.html">Create an account</a></li>
+          <li><a href="feed.html">Ask a question</a></li>
+          <li><a href="trips.html">Log a trip</a></li>
+          <li><a href="garage.html">Add a machine</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Stay in the loop</h4>
+        <p style="color:var(--muted);font-size:.86rem">One email a month. Best trip logs, no marketing noise.</p>
+        <form class="newsletter" id="newsletter" novalidate>
+          <label class="skip-link" for="nl-email">Email</label>
+          <input id="nl-email" type="email" placeholder="you@example.com" autocomplete="email">
+          <button type="submit">Join</button>
+        </form>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      <span>© 2026 Motorhead <span class="dot">◆</span> A community prototype</span>
+      <span>Built with a static stack <span class="dot">◆</span> Data stays in your browser</span>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/js/data.js"></script>
+<script src="assets/js/app.js"></script>
+</body>
+</html>
